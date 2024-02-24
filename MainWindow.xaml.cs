@@ -28,15 +28,6 @@ namespace Chess
 
         }
 
-        public Piece[] getPieces() {
-            return Pieces;
-        }
-
-        public Piece getPiece(int ID)
-        {
-            return Pieces[ID];
-        }
-
         private void defineMap(Piece[] Pieces)
         {
             Pieces[0] = new Rook("Black");
