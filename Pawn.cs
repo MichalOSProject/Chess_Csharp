@@ -4,8 +4,9 @@ public class Pawn : Piece
 {
 	public Pawn(string team) : base(team)
 	{
-		this.setTeam(team);
-	}
+		setTeam(team);
+        setPieceType("Pawn");
+    }
 
 	public new void move() { }
 

@@ -4,7 +4,8 @@ public class Rook : Piece
 {
 	public Rook(string team) : base(team)
 	{
-		this.setTeam(team);
+		setTeam(team);
+		setPieceType("Rook");
 	}
 
 	public new void move() { }

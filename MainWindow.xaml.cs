@@ -17,11 +17,11 @@ namespace Chess
 {
     public partial class MainWindow : Window
     {
+        private Piece[] Pieces = new Piece[64];
         public MainWindow()
         {
             InitializeComponent();
-            createMap();
-            Piece[] Pieces = new Piece[64];
+            createMap(Pieces);
             fillMap(Pieces);
 
         }
@@ -52,7 +52,7 @@ namespace Chess
                 Pieces[i] = new EmptyPiece();
         }
 
-        private void createMap()
+        private void createMap(Piece[] Pieces)
         {
             int ID = 0;
             for (int j = 0; j <= 7; j++)
@@ -68,9 +68,10 @@ namespace Chess
                     }
                     else
                     {
-                        BoardSpace.Background = Brushes.Black;
+                        BoardSpace.Background = Brushes.Red;
                     }
-                    BoardSpace.Name = "Bababab" + ID;
+                    BoardSpace.Tag = new int();
+                    BoardSpace.Tag = ID;
                     BoardSpace.Content = "B" + ID;
                     BoardSpace.Click += Button_Click;
                     Grid.SetColumn(BoardSpace, k);
@@ -83,7 +84,8 @@ namespace Chess
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show((sender as Button).Name);
+            gameAction.whoami((sender as Button).Tag.ToString(),Pieces);
         }
     }
 }
+

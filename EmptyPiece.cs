@@ -4,8 +4,9 @@ public class EmptyPiece : Piece
 {
 	public EmptyPiece(string team = "0") : base(team)
 	{
-		this.setTeam(team);
-	}
+		setTeam(team);
+        setPieceType("EmptyPiece");
+    }
 
 	public new void move() { }
 

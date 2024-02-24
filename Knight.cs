@@ -4,8 +4,9 @@ public class Knight : Piece
 {
 	public Knight(string team) : base(team)
 	{
-		this.setTeam(team);
-	}
+		setTeam(team);
+        setPieceType("Knight");
+    }
 
 	public new void move() { }
 
