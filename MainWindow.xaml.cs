@@ -17,16 +17,27 @@ namespace Chess
 {
     public partial class MainWindow : Window
     {
+        public int stage = 0;
         private Piece[] Pieces = new Piece[64];
         public MainWindow()
         {
             InitializeComponent();
+            defineMap(Pieces);
             createMap(Pieces);
-            fillMap(Pieces);
+
 
         }
 
-        private void fillMap(Piece[] Pieces)
+        public Piece[] getPieces() {
+            return Pieces;
+        }
+
+        public Piece getPiece(int ID)
+        {
+            return Pieces[ID];
+        }
+
+        private void defineMap(Piece[] Pieces)
         {
             Pieces[0] = new Rook("Black");
             Pieces[7] = new Rook("Black");
@@ -72,7 +83,7 @@ namespace Chess
                     }
                     BoardSpace.Tag = new int();
                     BoardSpace.Tag = ID;
-                    BoardSpace.Content = "B" + ID;
+                    BoardSpace.Content = Pieces[ID].getPieceType();
                     BoardSpace.Click += Button_Click;
                     Grid.SetColumn(BoardSpace, k);
                     Grid.SetRow(BoardSpace, j);
@@ -84,7 +95,7 @@ namespace Chess
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            gameAction.whoami((sender as Button).Tag.ToString(),Pieces);
+            gameActions.action((sender as Button).Tag.ToString(), stage);
         }
     }
 }
