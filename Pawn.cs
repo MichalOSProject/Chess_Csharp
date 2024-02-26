@@ -2,16 +2,22 @@
 
 public class Pawn : Piece
 {
-	public Pawn(string team) : base(team)
-	{
-		setTeam(team);
+    public Pawn(string team) : base(team)
+    {
+        setTeam(team);
         setPieceType("Pawn");
     }
 
-	public new void move() { }
+    public new int[] move(int IDconvert)
+    {
+        int[] possibleMoves = { 1 };
+        return possibleMoves;
+    }
 
     public new void attack() { }
 
-	public new void jump() { }
-
+    public new Boolean jump()
+    {
+        return false;
+    }
 }

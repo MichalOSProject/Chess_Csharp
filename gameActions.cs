@@ -1,19 +1,30 @@
 ﻿using System;
 using System.Windows;
+using System.Diagnostics;
 
-    public static class gameActions
+public static class gameActions
+{
+    //public static int[] possibleMoves;
+
+    public static void action(Piece[] Pieces, string ID, ref int stage)
     {
-        public static void action(string ID, int stage)
+
+        int IDconvert = int.Parse(ID);
+        string test2 = "";
+        if (stage == 0)
         {
-            if (stage == 0)
+            int test = Pieces[IDconvert].move(IDconvert);
+            foreach (int i in test)
             {
-                MessageBox.Show(getPiece(int.Parse(ID)).getPieceType());
-                //MessageBox.Show(Pieces[)].getPieceType());
+                test2 = test2 + i.ToString();
             }
-            else
-            {
-                MessageBox.Show("XD");
-                stage = 0;
-            }
+            MessageBox.Show(test2);
+            stage = 1;
+        }
+        else
+        {
+            MessageBox.Show("Wybrano, teraz ruch");
+            stage = 0;
         }
     }
+}

@@ -2,16 +2,23 @@
 
 public class EmptyPiece : Piece
 {
-	public EmptyPiece(string team = "0") : base(team)
-	{
-		setTeam(team);
+    public EmptyPiece(string team = "0") : base(team)
+    {
+        setTeam(team);
         setPieceType("");
     }
 
-	public new void move() { }
+    public new int[] move(int IDconvert)
+    {
+        int[] possibleMoves = { 1 };
+        return possibleMoves;
+    }
 
     public new void attack() { }
 
-	public new void jump() { }
+    public new Boolean jump()
+    {
+        return false;
+    }
 
 }

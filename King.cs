@@ -2,16 +2,22 @@
 
 public class King : Piece
 {
-	public King(string team) : base(team)
-	{
-		setTeam(team);
+    public King(string team) : base(team)
+    {
+        setTeam(team);
         setPieceType("King");
     }
 
-	public new void move() { }
+    public new int[] move(int IDconvert)
+    {
+        int[] possibleMoves = { 1 };
+        return possibleMoves;
+    }
 
     public new void attack() { }
 
-	public new void jump() { }
-
+    public new Boolean jump()
+    {
+        return false;
+    }
 }

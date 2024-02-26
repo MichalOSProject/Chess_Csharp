@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 
 namespace Chess
 {
+
     public partial class MainWindow : Window
     {
         public int stage = 0;
@@ -24,7 +25,6 @@ namespace Chess
             InitializeComponent();
             defineMap(Pieces);
             createMap(Pieces);
-
 
         }
 
@@ -86,7 +86,7 @@ namespace Chess
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            gameActions.action((sender as Button).Tag.ToString(), stage);
+            gameActions.action(Pieces, (sender as Button).Tag.ToString(), ref stage);
         }
     }
 }

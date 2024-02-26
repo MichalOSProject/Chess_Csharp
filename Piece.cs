@@ -9,11 +9,18 @@ public abstract class Piece
     {
     }
 
-    public void move() { }
+    public int[] move(int IDconvert)
+    {
+        int[] possibleMoves = { 1 };
+        return possibleMoves;
+    }
 
     public void attack() { }
 
-    public void jump() { }
+    public Boolean jump()
+    {
+        return false;
+    }
 
     public void setTeam(string team)
     {
