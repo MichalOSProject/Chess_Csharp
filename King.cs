@@ -1,23 +1,26 @@
 ﻿using System;
+using System.Collections;
 
 public class King : Piece
 {
-    public King(string team) : base(team)
+    int[,] moves = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }, { -1, -1 }, { -1, 1 }, { 1, -1 }, { 1, 1 } };
+
+    public King(string team) : base(team, "King")
     {
-        setTeam(team);
-        setPieceType("King");
     }
 
-    public new int[] move(int IDconvert)
+    public override int[,] move()
     {
-        int[] possibleMoves = { 1 };
-        return possibleMoves;
+        return moves;
     }
 
-    public new void attack() { }
-
-    public new Boolean jump()
+    public override int[,] attack()
     {
-        return false;
+        return moves;
+    }
+
+    public override Boolean specified()
+    {
+        return true;
     }
 }

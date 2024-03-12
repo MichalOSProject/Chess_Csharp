@@ -1,38 +1,26 @@
 ﻿using System;
+using System.Collections;
+using System.Windows;
 
 public class Knight : Piece
 {
-    public Knight(string team) : base(team)
+    int[,] moves = { { -2, -1 }, { -2, 1 }, { 2, -1 }, { 2, 1 }, { -1, -2 }, { 1, -2 }, { -1, 2 }, { 1, 2 } };
+
+    public Knight(string team) : base(team, "Knight")
     {
-        setTeam(team);
-        setPieceType("Knight");
     }
 
-    public new int[] move(int IDconvert)
+    public override int[,] move()
     {
-        int[,] moves = { { -2, -1 }, { -2, 1 }, { 1, 2 }, { 1, -2 }, { -1, -2 }, { -1, 2 }, { -2, -1 }, { -2, 1 } };
-        int[] possibleMoves = new int[8];
-        int Count = 0;
-        int Column = IDconvert % 8;
-        int Row = (IDconvert - Column) / 8;
-        for (int i = 0; i <= moves.GetLength(0); i++)
-        {
-            if (Row + moves[i, 0] <= 7 && Row + moves[i, 0] >= 0 && Column + moves[i, 1] <= 7 && Column + moves[i, 1] >= 0)
-            {
-                possibleMoves[Count] = ((Column + moves[i, 1]) * 8) + (Row + moves[i, 0]);
-                Count++;
-            }
-
-        }
-        return possibleMoves;
+        return moves;
     }
 
-    public new void attack()
+    public override int[,] attack()
     {
-
+        return moves;
     }
 
-    public new Boolean jump()
+    public override Boolean specified()
     {
         return true;
     }

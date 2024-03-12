@@ -1,22 +1,25 @@
 ﻿using System;
+using System.Collections;
 
 public class Rook : Piece
 {
-    public Rook(string team) : base(team)
+    int[,] moves = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+
+    public Rook(string team) : base(team, "Rook")
     {
-        setTeam(team);
-        setPieceType("Rook");
     }
 
-    public new int[] move(int IDconvert)
+    public override int[,] move()
     {
-        int[] possibleMoves = { 1 };
-        return possibleMoves;
+        return moves;
     }
 
-    public new void attack() { }
+    public override int[,] attack()
+    {
+        return moves;
+    }
 
-    public new Boolean jump()
+    public override Boolean specified()
     {
         return false;
     }

@@ -2,21 +2,23 @@
 
 public class EmptyPiece : Piece
 {
-    public EmptyPiece(string team = "0") : base(team)
+    int[,] moves = { {0,0}, {0,0} };
+
+    public EmptyPiece(string team = "FF") : base(team, "")
     {
-        setTeam(team);
-        setPieceType("");
     }
 
-    public new int[] move(int IDconvert)
+    public override int[,] move()
     {
-        int[] possibleMoves = { 1 };
-        return possibleMoves;
+        return moves;
     }
 
-    public new void attack() { }
+    public override int[,] attack()
+    {
+        return moves;
+    }
 
-    public new Boolean jump()
+    public override Boolean specified()
     {
         return false;
     }

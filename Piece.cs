@@ -1,40 +1,35 @@
 ﻿using System;
+using System.Windows;
+using System.Collections;
+using System.Diagnostics;
 
 public abstract class Piece
 {
-    string team = "Not Defined";
-    string pieceType = "Not Defined";
+    protected Boolean moved = false;
 
-    public Piece(string team)
-    {
-    }
+    private string team = "Not Defined";
+    private string pieceType = "Not Defined";
 
-    public int[] move(int IDconvert)
-    {
-        int[] possibleMoves = { 1 };
-        return possibleMoves;
-    }
-
-    public void attack() { }
-
-    public Boolean jump()
-    {
-        return false;
-    }
-
-    public void setTeam(string team)
+    public Piece(string team, string pieceType)
     {
         this.team = team;
+        this.pieceType = pieceType;
+    }
+
+    public abstract int[,] move();
+
+    public abstract int[,] attack();
+
+    public abstract Boolean specified();
+
+    public void setMoved(Boolean moved)
+    {
+        this.moved = moved;
     }
 
     public string getTeam()
     {
         return team;
-    }
-
-    public void setPieceType(string pieceType)
-    {
-        this.pieceType = pieceType;
     }
 
     public string getPieceType()

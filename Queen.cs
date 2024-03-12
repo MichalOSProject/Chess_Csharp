@@ -1,22 +1,25 @@
 ﻿using System;
+using System.Collections;
 
 public class Queen : Piece
 {
-    public Queen(string team) : base(team)
+    int[,] moves = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 }, { -1, -1 }, { -1, 1 }, { 1, -1 }, { 1, 1 } };
+
+    public Queen(string team) : base(team, "Queen")
     {
-        setTeam(team);
-        setPieceType("Queen");
     }
 
-    public new int[] move(int IDconvert)
+    public override int[,] move()
     {
-        int[] possibleMoves = { 1 };
-        return possibleMoves;
+        return moves;
     }
 
-    public new void attack() { }
+    public override int[,] attack()
+    {
+        return moves;
+    }
 
-    public new Boolean jump()
+    public override Boolean specified()
     {
         return false;
     }

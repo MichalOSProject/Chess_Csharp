@@ -1,22 +1,26 @@
 ﻿using System;
+using System.Collections;
+using System.Windows;
 
 public class Bishop : Piece
 {
-    public Bishop(string team) : base(team)
+    int[,] moves = { { -1, -1 }, { -1, 1 }, { 1, -1 }, { 1, 1 } };
+
+    public Bishop(string team) : base(team, "Bishop")
     {
-        setTeam(team);
-        setPieceType("Bishop");
     }
 
-    public new int[] move(int IDconvert)
+    public override int[,] move()
     {
-        int[] possibleMoves = { 1 };
-        return possibleMoves;
+        return moves;
     }
 
-    public new void attack() { }
+    public override int[,] attack()
+    {
+        return moves;
+    }
 
-    public new Boolean jump()
+    public override Boolean specified()
     {
         return false;
     }
