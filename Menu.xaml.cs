@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Chess
 {
@@ -20,7 +11,11 @@ namespace Chess
     /// </summary>
     public partial class Menu : Window
     {
+        public Color bColor1 = Color.FromRgb(0, 0, 0);
+        public Color bColor2 = Color.FromRgb(254, 254, 254);
         private Game gameWindow;
+        private ColorPanel colorWindow;
+        protected Boolean team = false;
         public Menu()
         {
             InitializeComponent();
@@ -49,17 +44,84 @@ namespace Chess
             Grid.SetColumn(l2type, 1);
             Grid.SetRow(l2type, 3);
             GameMenu.Children.Add(l2type);
+            Button bTeam = new Button();
+            bTeam.Content = "";
+            bTeam.Background = Brushes.Black;
+            bTeam.Name = "sTeam";
+            bTeam.Click += changeTeam;
+            Grid.SetColumn(bTeam, 3);
+            Grid.SetRow(bTeam, 1);
+            GameMenu.Children.Add(bTeam);
+            Button color1 = new Button();
+            color1.Content = "1# Color";
+            color1.Name = "bColor1";
+            color1.Click += setColor;
+            color1.Background = new SolidColorBrush(bColor1);
+            Grid.SetColumn(color1, 3);
+            Grid.SetRow(color1, 2);
+            GameMenu.Children.Add(color1);
+            Button color2 = new Button();
+            color2.Content = "2# Color";
+            color2.Name = "bColor2";
+            color2.Click += setColor;
+            color2.Background = new SolidColorBrush(bColor2);
+            Grid.SetColumn(color2, 3);
+            Grid.SetRow(color2, 3);
+            GameMenu.Children.Add(color2);
         }
 
-        private void newGame (object sender, RoutedEventArgs e)
+        private void setColor(object sender, RoutedEventArgs e)
         {
-            if (gameWindow == null || ! gameWindow.IsVisible)
+            if (colorWindow == null || !colorWindow.IsVisible)
             {
-                gameWindow = new Game();
+                if ((sender as Button).Name == "bColor1")
+                    colorWindow = new ColorPanel(bColor1);
+                else
+                    colorWindow = new ColorPanel(bColor2);
+
+                colorWindow.Closed += (s, args) =>
+                {
+                    if ((sender as Button).Name == "bColor1")
+                        bColor1 = colorWindow.selectedColor;
+                    else
+                        bColor2 = colorWindow.selectedColor;
+                    (sender as Button).Background = new SolidColorBrush(colorWindow.selectedColor);
+                    colorWindow = null;
+                };
+                colorWindow.Show();
+
+            }
+            else
+            {
+                colorWindow.Activate();
+            }
+
+        }
+
+        private void changeTeam(object sender, RoutedEventArgs e)
+        {
+            this.team = !this.team;
+            if (team)
+                (sender as Button).Background = Brushes.White;
+            else
+                (sender as Button).Background = Brushes.Black;
+        }
+        private void newGame(object sender, RoutedEventArgs e)
+        {
+            if (gameWindow == null || !gameWindow.IsVisible)
+            {
+                gameWindow = new Game(bColor1, bColor2);
+                Debug.WriteLine(bColor1.R);
+                Debug.WriteLine(bColor1.G);
+                Debug.WriteLine(bColor1.B);
+                Debug.WriteLine(bColor2.R);
+                Debug.WriteLine(bColor2.G);
+                Debug.WriteLine(bColor2.B);
                 gameWindow.Closed += (s, args) => { gameWindow = null; };
                 gameWindow.Show();
             }
-            else {
+            else
+            {
                 gameWindow.Activate();
             }
         }

@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Media;
 
 namespace Chess
@@ -17,12 +16,21 @@ namespace Chess
         private int lastUsed;
         private int checkMateStatusW = 0;
         private int checkMateStatusB = 0;
-        public Game()
+        private Color bColor1;
+        private Color bColor2;
+        public Game(Color bColor1, Color bColor2)
         {
+            this.bColor1 = bColor1;
+            this.bColor2 = bColor2;
+            Debug.WriteLine(this.bColor1.R);
+            Debug.WriteLine(this.bColor1.G);
+            Debug.WriteLine(this.bColor1.B);
+            Debug.WriteLine(this.bColor2.R);
+            Debug.WriteLine(this.bColor2.G);
+            Debug.WriteLine(this.bColor2.B);
             InitializeComponent();
             defineMap();
             createMap();
-
         }
 
         private void defineMap()
@@ -86,11 +94,11 @@ namespace Chess
                     bool evenColumn = ID % 2 == 0;
                     if (evenRow == evenColumn)
                     {
-                        BoardSpace[j, k].Background = Brushes.White;
+                        BoardSpace[j, k].Background = new SolidColorBrush(bColor1);
                     }
                     else
                     {
-                        BoardSpace[j, k].Background = Brushes.Red;
+                        BoardSpace[j, k].Background = new SolidColorBrush(bColor2);
                     }
                     BoardSpace[j, k].Tag = new int();
                     BoardSpace[j, k].Tag = ID;
@@ -105,10 +113,10 @@ namespace Chess
                     Grid.SetRow(BoardSpace[j, k], j);
                     SandBox.Children.Add(BoardSpace[j, k]);
                     ID++;
+
                 }
             }
         }
-
         private void repaint(ref Button[,] BoardSpace, int[,] stats)
         {
             setMoves();
@@ -122,18 +130,18 @@ namespace Chess
                     BoardSpace[j, k].Content = Pieces[ID].getPieceType();
                     if (evenRow == evenColumn)
                     {
-                        BoardSpace[j, k].Background = Brushes.White;
+                        BoardSpace[j, k].Background = new SolidColorBrush(bColor1);
                     }
                     else
                     {
-                        BoardSpace[j, k].Background = Brushes.Red;
+                        BoardSpace[j, k].Background = new SolidColorBrush(bColor2);
                     }
                     if (Pieces[ID].getTeam() == "White")
                         BoardSpace[j, k].Foreground = Brushes.Yellow;
                     if (Pieces[ID].getTeam() == "Black")
                         BoardSpace[j, k].Foreground = Brushes.Purple;
                     if (stats[ID, 0] != 0)
-                        BoardSpace[j, k].Background = Brushes.Brown;
+                        BoardSpace[j, k].Background = Brushes.Gray;
                     ID++;
                 }
             }
@@ -172,7 +180,7 @@ namespace Chess
                 repaint(ref BoardSpace, stats);
                 lastUsed = int.Parse((sender as Button).Tag.ToString());
             }
-            
+
 
 
             //test
