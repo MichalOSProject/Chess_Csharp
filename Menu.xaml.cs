@@ -6,9 +6,6 @@ using System.Windows.Media;
 
 namespace Chess
 {
-    /// <summary>
-    /// Logika interakcji dla klasy Menu.xaml
-    /// </summary>
     public partial class Menu : Window
     {
         public Color bColor1 = Color.FromRgb(0, 0, 0);

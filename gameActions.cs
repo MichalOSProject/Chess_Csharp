@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
 using System.Diagnostics;
-using System.Windows.Controls;
-using System.Data.Common;
-using System.Windows.Input;
-using System.Collections;
 
 public static class gameActions
 {
@@ -67,7 +59,7 @@ public static class gameActions
                 int currentIndex = (currentRow * 8) + currentColumn;
                 if (inGame(currentColumn, currentRow))
                 {
-                    if (Pieces[currentIndex].getTeam() != kingsTeam && stats[currentIndex, sensitive] == 0)//i tutaj warunek na znalezienie kolegi :P)
+                    if (Pieces[currentIndex].getTeam() != kingsTeam && stats[currentIndex, sensitive] == 0)
                         checkMateStatus = 1;
                 }
             }
