@@ -91,12 +91,14 @@ public static class gameActions
         int[,] attackMap = Pieces[IDconvert].attack();
         int Column = IDconvert % 8;
         int Row = (IDconvert - Column) / 8;
+        Boolean breakLoop;
 
 
         for (int i = 0; i < moves.GetLength(0); i++)
         {
-            for (int j = 1; j < 8; j++)
+            for (int j = 0; j < Pieces[IDconvert].jumpMove();)
             {
+                j++;
                 int currentRow = Row + (moves[i, 1] * j);
                 int currentColumn = Column + (moves[i, 0] * j);
                 int currentIndex = (currentRow * 8) + currentColumn;
@@ -108,31 +110,39 @@ public static class gameActions
                     }
                     else
                     {
-                        j = 8;
+                        j = Pieces[IDconvert].jumpMove();
                     }
                 }
                 else
                 {
-                    j = 8;
+                    j = Pieces[IDconvert].jumpMove();
                 }
-                if (Pieces[IDconvert].specified())
-                    j = 8;
             }
         }
 
         for (int i = 0; i < attackMap.GetLength(0); i++)
         {
-            for (int j = 1; j < 8; j++)
+            breakLoop = false;
+            for (int j = 0; j < Pieces[IDconvert].jumpAttack();)
             {
+                j++;
+                if (breakLoop)
+                    break;
                 int currentRow = Row + (attackMap[i, 1] * j);
                 int currentColumn = Column + (attackMap[i, 0] * j);
                 int currentIndex = (currentRow * 8) + currentColumn;
                 if (inGame(currentColumn, currentRow))
                 {
-                    if (Pieces[currentIndex].getTeam() != "FF")
+                    if (dmg == 0 && Pieces[currentIndex].getPieceType() != "King")
                     {
-                        if (dmg == 0 && Pieces[currentIndex].getTeam() != Pieces[IDconvert].getTeam() && Pieces[currentIndex].getPieceType() != "King")
+                        if (Pieces[currentIndex].getTeam() != Pieces[IDconvert].getTeam() && Pieces[currentIndex].getTeam() != "FF")
                             stats[currentIndex, 0] = 1;
+                    }
+
+                    if (Pieces[currentIndex].getTeam() != "FF")
+                        breakLoop = true;
+                    if (Pieces[currentIndex].getTeam() != Pieces[IDconvert].getTeam())
+                    {
                         if (Pieces[IDconvert].getTeam() == "White")
                         {
                             stats[currentIndex, 1] += dmg;
@@ -141,12 +151,9 @@ public static class gameActions
                         {
                             stats[currentIndex, 2] += dmg;
                         }
-                        break;
                     }
                 }
                 else
-                    break;
-                if (Pieces[IDconvert].specified())
                     break;
             }
         }

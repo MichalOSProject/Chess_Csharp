@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Windows;
-using System.Collections;
-using System.Diagnostics;
+using System.Windows.Controls;
 
 public abstract class Piece
 {
     protected Boolean moved = false;
+    protected String textureURL;
+    protected Image Texture;
 
     private string team = "Not Defined";
     private string pieceType = "Not Defined";
@@ -20,7 +20,11 @@ public abstract class Piece
 
     public abstract int[,] attack();
 
-    public abstract Boolean specified();
+    public abstract int jumpMove();
+
+    public abstract int jumpAttack();
+
+    public abstract Image getTexture();
 
     public void setMoved(Boolean moved)
     {

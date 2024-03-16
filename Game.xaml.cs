@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Chess
 {
@@ -102,7 +103,7 @@ namespace Chess
                     }
                     BoardSpace[j, k].Tag = new int();
                     BoardSpace[j, k].Tag = ID;
-                    BoardSpace[j, k].Content = Pieces[ID].getPieceType();
+                    BoardSpace[j, k].Content = Pieces[ID].getTexture();
                     BoardSpace[j, k].Click += Button_Click;
                     BoardSpace[j, k].FontWeight = FontWeights.Bold;
                     if (Pieces[ID].getTeam() == "White")
@@ -127,7 +128,7 @@ namespace Chess
                 {
                     bool evenRow = (ID / 8) % 2 == 0;
                     bool evenColumn = ID % 2 == 0;
-                    BoardSpace[j, k].Content = Pieces[ID].getPieceType();
+                    BoardSpace[j, k].Content = Pieces[ID].getTexture();
                     if (evenRow == evenColumn)
                     {
                         BoardSpace[j, k].Background = new SolidColorBrush(bColor1);

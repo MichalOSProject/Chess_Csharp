@@ -1,5 +1,7 @@
 ﻿using System;
-using System.Collections;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
+using System.Windows;
 
 public class Rook : Piece
 {
@@ -7,6 +9,16 @@ public class Rook : Piece
 
     public Rook(string team) : base(team, "Rook")
     {
+        if (getTeam() == "White")
+            textureURL = "/Texture/RookW.png";
+        else
+            textureURL = "/Texture/RookB.png";
+        Texture = new Image
+        {
+            Source = new BitmapImage(new Uri(textureURL, UriKind.Relative)),
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
     }
 
     public override int[,] move()
@@ -19,8 +31,17 @@ public class Rook : Piece
         return moves;
     }
 
-    public override Boolean specified()
+    public override int jumpMove()
     {
-        return false;
+        return 7;
+    }
+    public override int jumpAttack()
+    {
+        return 7;
+    }
+
+    public override Image getTexture()
+    {
+        return Texture;
     }
 }

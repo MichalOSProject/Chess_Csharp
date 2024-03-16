@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using System.Windows;
 
 public class Knight : Piece
@@ -8,6 +9,16 @@ public class Knight : Piece
 
     public Knight(string team) : base(team, "Knight")
     {
+        if (getTeam() == "White")
+            textureURL = "/Texture/KnightW.png";
+        else
+            textureURL = "/Texture/KnightB.png";
+        Texture = new Image
+        {
+            Source = new BitmapImage(new Uri(textureURL, UriKind.Relative)),
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
     }
 
     public override int[,] move()
@@ -20,8 +31,17 @@ public class Knight : Piece
         return moves;
     }
 
-    public override Boolean specified()
+    public override int jumpMove()
     {
-        return true;
+        return 1;
+    }
+    public override int jumpAttack()
+    {
+        return 1;
+    }
+
+    public override Image getTexture()
+    {
+        return Texture;
     }
 }

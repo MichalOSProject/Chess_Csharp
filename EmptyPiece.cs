@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
+using System.Windows;
 
 public class EmptyPiece : Piece
 {
@@ -18,9 +21,16 @@ public class EmptyPiece : Piece
         return moves;
     }
 
-    public override Boolean specified()
+    public override int jumpMove()
     {
-        return false;
+        return 1;
     }
-
+    public override int jumpAttack()
+    {
+        return 1;
+    }
+    public override Image getTexture()
+    {
+        return null;
+    }
 }

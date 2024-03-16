@@ -1,5 +1,7 @@
 ﻿using System;
-using System.Collections;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
+using System.Windows;
 
 public class Queen : Piece
 {
@@ -7,6 +9,16 @@ public class Queen : Piece
 
     public Queen(string team) : base(team, "Queen")
     {
+        if (getTeam() == "White")
+            textureURL = "/Texture/QueenW.png";
+        else
+            textureURL = "/Texture/QueenB.png";
+        Texture = new Image
+        {
+            Source = new BitmapImage(new Uri(textureURL, UriKind.Relative)),
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
     }
 
     public override int[,] move()
@@ -19,8 +31,17 @@ public class Queen : Piece
         return moves;
     }
 
-    public override Boolean specified()
+    public override int jumpMove()
     {
-        return false;
+        return 7;
+    }
+    public override int jumpAttack()
+    {
+        return 7;
+    }
+
+    public override Image getTexture()
+    {
+        return Texture;
     }
 }

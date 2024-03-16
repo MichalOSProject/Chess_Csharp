@@ -1,43 +1,41 @@
 ﻿using System;
-using System.Collections;
-using System.Windows.Input;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
+using System.Windows;
+using System.Diagnostics;
 
 public class Pawn : Piece
 {
     int[,] movesB = { { 0, 1 } };
     int[,] movesW = { { 0, -1 } };
-    int[,] movesFB = { { 0, 1 }, { 0, 2 } };
-    int[,] movesFW = { { 0, -1 }, { 0, -2 } };
 
     int[,] attackMapB = { { 1, 1 }, { -1, 1 } };
     int[,] attackMapW = { { 1, -1 }, { -1, -1 } };
+
+    int specifiedCount = 2;
     public Pawn(string team) : base(team, "Pawn")
     {
+        if (getTeam() == "White")
+            textureURL = "/Texture/PawnW.png";
+        else
+            textureURL = "/Texture/PawnB.png";
+        Texture = new Image
+        {
+            Source = new BitmapImage(new Uri(textureURL, UriKind.Relative)),
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
     }
 
     public override int[,] move()
     {
         if (getTeam() == "White")
         {
-            if (!moved)
-            {
-                return movesFW;
-            }
-            else
-            {
                 return movesW;
-            }
         }
         else
         {
-            if (!moved)
-            {
-                return movesFB;
-            }
-            else
-            {
                 return movesB;
-            }
         }
 
     }
@@ -54,8 +52,20 @@ public class Pawn : Piece
         }
     }
 
-    public override Boolean specified()
+    public override int jumpMove()
     {
-        return true;
+        if (!moved)
+            return 2;
+        else
+            return 1;
+    }
+    public override int jumpAttack()
+    {
+        return 1;
+    }
+
+    public override Image getTexture()
+    {
+        return Texture;
     }
 }

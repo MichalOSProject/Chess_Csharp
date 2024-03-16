@@ -7,4 +7,34 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Texture\BishopB.png" />
+    <None Remove="Texture\BishopW.png" />
+    <None Remove="Texture\KingB.png" />
+    <None Remove="Texture\KingW.png" />
+    <None Remove="Texture\KnightB.png" />
+    <None Remove="Texture\KnightW.png" />
+    <None Remove="Texture\PawnB.png" />
+    <None Remove="Texture\PawnW.png" />
+    <None Remove="Texture\QueenB.png" />
+    <None Remove="Texture\QueenW.png" />
+    <None Remove="Texture\RookB.png" />
+    <None Remove="Texture\RookW.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Texture\BishopB.png" />
+    <Resource Include="Texture\BishopW.png" />
+    <Resource Include="Texture\KingB.png" />
+    <Resource Include="Texture\KingW.png" />
+    <Resource Include="Texture\KnightB.png" />
+    <Resource Include="Texture\KnightW.png" />
+    <Resource Include="Texture\PawnB.png" />
+    <Resource Include="Texture\PawnW.png" />
+    <Resource Include="Texture\QueenB.png" />
+    <Resource Include="Texture\QueenW.png" />
+    <Resource Include="Texture\RookB.png" />
+    <Resource Include="Texture\RookW.png" />
+  </ItemGroup>
+
 </Project>
