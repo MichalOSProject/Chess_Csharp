@@ -13,16 +13,18 @@ namespace Chess
         private Piece[] Pieces;
         private Button[,] BoardSpace;
         private int[,,] stats; //[ID,1-3,attacker]
+        private int played;
         private int lastUsed;
         private int checkMateStatusW = 0;
         private int checkMateStatusB = 0;
         private Color bColor1;
         private Color bColor2;
-        protected String team;
+        private String team = "White";
         public Game(Color bColor1, Color bColor2, String team)
         {
             this.bColor1 = bColor1;
             this.bColor2 = bColor2;
+
             Debug.WriteLine(this.bColor1.R);
             Debug.WriteLine(this.bColor1.G);
             Debug.WriteLine(this.bColor1.B);
@@ -106,8 +108,7 @@ namespace Chess
                     {
                         BoardSpace[j, k].Background = new SolidColorBrush(bColor2);
                     }
-                    BoardSpace[j, k].Tag = new int();
-                    BoardSpace[j, k].Tag = ID;
+                    BoardSpace[j, k].Tag = Int32.Parse(ID.ToString());
                     BoardSpace[j, k].Content = Pieces[ID].getTexture();
                     BoardSpace[j, k].Click += Button_Click;
                     BoardSpace[j, k].FontWeight = FontWeights.Bold;
@@ -142,12 +143,10 @@ namespace Chess
                     {
                         BoardSpace[j, k].Background = new SolidColorBrush(bColor2);
                     }
-                    if (Pieces[ID].getTeam() == "White")
-                        BoardSpace[j, k].Foreground = Brushes.Yellow;
-                    if (Pieces[ID].getTeam() == "Black")
-                        BoardSpace[j, k].Foreground = Brushes.Purple;
                     if (stats[ID, 0, 0] != 0)
                         BoardSpace[j, k].Background = Brushes.Gray;
+                    if (played == ID && stage == 1)
+                        BoardSpace[j, k].Background = Brushes.LightBlue;
                     ID++;
                 }
             }
@@ -155,7 +154,7 @@ namespace Chess
 
         private Boolean allowedPlace(int ID)
         {
-            if (stats[ID, 0, 0] != 0 || stage == 0 || lastUsed == ID)
+            if ((stats[ID, 0, 0] != 0 || stage == 0 || lastUsed == ID) && (Pieces[ID].getTeam() == team || stage == 1))
             {
                 return true;
             }
@@ -174,32 +173,54 @@ namespace Chess
                         checkMateStatusW = gameActions.checkMate(Pieces, stats, i);
                     else
                         checkMateStatusB = gameActions.checkMate(Pieces, stats, i);
+
             }
+            if (checkMateStatusB == 2 && checkMateStatusW == 2)
+            {
+                MessageBox.Show("Draw!");
+                this.Close();
+            }
+            else if (checkMateStatusW == 2)
+            {
+                MessageBox.Show("The Black Team Wins!");
+                this.Close();
+            }
+            else if (checkMateStatusB == 2)
+            {
+                MessageBox.Show("The White Team Wins!");
+                this.Close();
+            }
+            else
+            {
+                if (checkMateStatusW == 1)
+                    MessageBox.Show("The King of the White Team is in Danger!");
+                if (checkMateStatusB == 1)
+                    MessageBox.Show("The King of the Black Team is in Danger!");
+            }
+
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (allowedPlace(int.Parse((sender as Button).Tag.ToString())))
+            played = (int)(sender as Button).Tag;
+            if (allowedPlace(played))
             {
                 if (stage == 1)
                     clearMoves();
-                gameActions.action(ref Pieces, (sender as Button).Tag.ToString(), ref stage, ref stats);
+                gameActions.action(ref Pieces, ref stage, ref stats, played);
                 repaint(ref BoardSpace, stats);
-                lastUsed = int.Parse((sender as Button).Tag.ToString());
+
                 if (stage == 0)
+                {
                     endgame();
+                    if (played != lastUsed)
+                    if (team == "White")
+                        team = "Black";
+                    else
+                        team = "White";
+                }
+                lastUsed = played;
+
             }
-
-
-
-            /*
-            for (int i = 0; i < 64; i++)
-            {
-                Debug.WriteLine("ID: " + i + ", White: " + stats[i, 1, 0] + ", Black: " + stats[i, 2, 0]);
-            }
-            endgame();
-            Debug.WriteLine("Status szachmat dla W: " + checkMateStatusW);
-            Debug.WriteLine("Status szachmat dla B: " + checkMateStatusB);
-            */
         }
     }
 }

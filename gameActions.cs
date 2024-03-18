@@ -5,11 +5,8 @@ public static class gameActions
 {
     static Piece buffPiece;
     static int buffId = 0;
-    public static void action(ref Piece[] Pieces, string ID, ref int stage, ref int[,,] stats)
+    public static void action(ref Piece[] Pieces, ref int stage, ref int[,,] stats, int IDconvert)
     {
-
-        int IDconvert = int.Parse(ID);
-
         if (stage == 0)
         {
             buffPiece = Pieces[IDconvert];

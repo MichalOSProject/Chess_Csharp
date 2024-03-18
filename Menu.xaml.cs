@@ -12,7 +12,7 @@ namespace Chess
         public Color bColor2 = Color.FromRgb(254, 254, 254);
         private Game gameWindow;
         private ColorPanel colorWindow;
-        protected String team;
+        public String team;
         public Menu()
         {
             InitializeComponent();
@@ -24,7 +24,7 @@ namespace Chess
             Grid.SetRow(runGame, 8);
             GameMenu.Children.Add(runGame);
             Label lTeam = new Label();
-            lTeam.Content = "Team: ";
+            lTeam.Content = "Sel. Team: ";
             lTeam.Name = "lTeam";
             Grid.SetColumn(lTeam, 1);
             Grid.SetRow(lTeam, 1);
@@ -33,13 +33,13 @@ namespace Chess
             l1type.Content = "1'st Color: ";
             l1type.Name = "l1Color";
             Grid.SetColumn(l1type, 1);
-            Grid.SetRow(l1type, 2);
+            Grid.SetRow(l1type, 3);
             GameMenu.Children.Add(l1type);
             Label l2type = new Label();
             l2type.Content = "2'nd Color: ";
             l2type.Name = "l2Color";
             Grid.SetColumn(l2type, 1);
-            Grid.SetRow(l2type, 3);
+            Grid.SetRow(l2type, 5);
             GameMenu.Children.Add(l2type);
             Button bTeam = new Button();
             bTeam.Content = "";
@@ -55,7 +55,7 @@ namespace Chess
             color1.Click += setColor;
             color1.Background = new SolidColorBrush(bColor1);
             Grid.SetColumn(color1, 3);
-            Grid.SetRow(color1, 2);
+            Grid.SetRow(color1, 3);
             GameMenu.Children.Add(color1);
             Button color2 = new Button();
             color2.Content = "2# Color";
@@ -63,7 +63,7 @@ namespace Chess
             color2.Click += setColor;
             color2.Background = new SolidColorBrush(bColor2);
             Grid.SetColumn(color2, 3);
-            Grid.SetRow(color2, 3);
+            Grid.SetRow(color2, 5);
             GameMenu.Children.Add(color2);
         }
 
@@ -112,12 +112,6 @@ namespace Chess
             if (gameWindow == null || !gameWindow.IsVisible)
             {
                 gameWindow = new Game(bColor1, bColor2, team);
-                Debug.WriteLine(bColor1.R);
-                Debug.WriteLine(bColor1.G);
-                Debug.WriteLine(bColor1.B);
-                Debug.WriteLine(bColor2.R);
-                Debug.WriteLine(bColor2.G);
-                Debug.WriteLine(bColor2.B);
                 this.Hide();
                 gameWindow.Closed += (s, args) => { gameWindow = null; this.Show(); };
                 gameWindow.Show();
@@ -129,9 +123,3 @@ namespace Chess
         }
     }
 }
-/*
- * ToDO:
- * -włącz działanie teamów
- * -koniec gry
- * -poprawienie króla bo zabicie konia pionkiem nie jest uwzględniona
-*/
