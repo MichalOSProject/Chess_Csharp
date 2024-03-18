@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace Chess
 {
@@ -13,13 +12,14 @@ namespace Chess
         private int stage = 0;
         private Piece[] Pieces;
         private Button[,] BoardSpace;
-        private int[,] stats;
+        private int[,,] stats; //[ID,1-3,attacker]
         private int lastUsed;
         private int checkMateStatusW = 0;
         private int checkMateStatusB = 0;
         private Color bColor1;
         private Color bColor2;
-        public Game(Color bColor1, Color bColor2)
+        protected String team;
+        public Game(Color bColor1, Color bColor2, String team)
         {
             this.bColor1 = bColor1;
             this.bColor2 = bColor2;
@@ -36,7 +36,7 @@ namespace Chess
 
         private void defineMap()
         {
-            stats = new int[64, 3];
+            stats = new int[64, 3, 10];
             clearMoves();
             Pieces = new Piece[64];
             Pieces[0] = new Rook("Black");
@@ -67,10 +67,14 @@ namespace Chess
 
         private void setMoves()
         {
+
             for (int i = 0; i < 64; i++)
             {
-                stats[i, 1] = 0;
-                stats[i, 2] = 0;
+                for (int j = 0; j < 10; j++)
+                {
+                    stats[i, 1, j] = 100;
+                    stats[i, 2, j] = 100;
+                }
             }
             for (int i = 0; i < 64; i++)
                 gameActions.assignMoves(i, ref stats, ref Pieces, 1);
@@ -79,8 +83,9 @@ namespace Chess
         {
             for (int i = 0; i < 64; i++)
             {
-                stats[i, 0] = 0;
+                stats[i, 0, 0] = 0;
             }
+
         }
         private void createMap()
         {
@@ -118,7 +123,7 @@ namespace Chess
                 }
             }
         }
-        private void repaint(ref Button[,] BoardSpace, int[,] stats)
+        private void repaint(ref Button[,] BoardSpace, int[,,] stats)
         {
             setMoves();
             int ID = 0;
@@ -141,7 +146,7 @@ namespace Chess
                         BoardSpace[j, k].Foreground = Brushes.Yellow;
                     if (Pieces[ID].getTeam() == "Black")
                         BoardSpace[j, k].Foreground = Brushes.Purple;
-                    if (stats[ID, 0] != 0)
+                    if (stats[ID, 0, 0] != 0)
                         BoardSpace[j, k].Background = Brushes.Gray;
                     ID++;
                 }
@@ -150,7 +155,7 @@ namespace Chess
 
         private Boolean allowedPlace(int ID)
         {
-            if (stats[ID, 0] != 0 || stage == 0 || lastUsed == ID)
+            if (stats[ID, 0, 0] != 0 || stage == 0 || lastUsed == ID)
             {
                 return true;
             }
@@ -180,19 +185,21 @@ namespace Chess
                 gameActions.action(ref Pieces, (sender as Button).Tag.ToString(), ref stage, ref stats);
                 repaint(ref BoardSpace, stats);
                 lastUsed = int.Parse((sender as Button).Tag.ToString());
+                if (stage == 0)
+                    endgame();
             }
 
 
 
-            //test
+            /*
             for (int i = 0; i < 64; i++)
             {
-                Debug.WriteLine("ID: " + i + ", White: " + stats[i, 1] + ", Black: " + stats[i, 2]);
+                Debug.WriteLine("ID: " + i + ", White: " + stats[i, 1, 0] + ", Black: " + stats[i, 2, 0]);
             }
             endgame();
             Debug.WriteLine("Status szachmat dla W: " + checkMateStatusW);
             Debug.WriteLine("Status szachmat dla B: " + checkMateStatusB);
-
+            */
         }
     }
 }

@@ -5,7 +5,7 @@ public static class gameActions
 {
     static Piece buffPiece;
     static int buffId = 0;
-    public static void action(ref Piece[] Pieces, string ID, ref int stage, ref int[,] stats)
+    public static void action(ref Piece[] Pieces, string ID, ref int stage, ref int[,,] stats)
     {
 
         int IDconvert = int.Parse(ID);
@@ -31,7 +31,7 @@ public static class gameActions
         }
 
     }
-    public static int checkMate(Piece[] Pieces, int[,] stats, int ID)
+    public static int checkMate(Piece[] Pieces, int[,,] stats, int ID)
     {
         int checkMateStatus = 0;
         int[,] attackMap = Pieces[ID].attack();
@@ -39,16 +39,29 @@ public static class gameActions
         int Row = (ID - Column) / 8;
         string kingsTeam = Pieces[ID].getTeam();
         int sensitive = 1; // 1-> sensitive for Black dmg 2->sensitive for Black dmg
-        Boolean endangered = false;
-        Boolean possibleMoves = true;
+        int enemySensitive = 2;
+        int killableSensitive = 0;
 
-        Debug.WriteLine("Jestem krolem ID: " + ID + ", Koloru: " + Pieces[ID].getTeam());
         if (kingsTeam == "White")
-            sensitive = 2;
-
-        if (stats[ID, sensitive] != 0)
         {
-            checkMateStatus = 2;
+            sensitive = 2;
+            enemySensitive = 1;
+        }
+        if (stats[ID, sensitive, 0] != 100)
+        {
+            checkMateStatus = 1;
+            for (int i = 0; i < 10; i++)
+            {
+                int attacker = stats[ID, sensitive, i];
+                if (attacker == 100)
+                    break;
+                if (stats[attacker, enemySensitive, 0] == 100)
+                    checkMateStatus = 2;
+                else
+                    killableSensitive++;
+            }
+            if (killableSensitive >= 2)
+                checkMateStatus = 2;
         }
         if (checkMateStatus != 0)
         {
@@ -59,11 +72,12 @@ public static class gameActions
                 int currentIndex = (currentRow * 8) + currentColumn;
                 if (inGame(currentColumn, currentRow))
                 {
-                    if (Pieces[currentIndex].getTeam() != kingsTeam && stats[currentIndex, sensitive] == 0)
+                    if (Pieces[currentIndex].getTeam() != kingsTeam && stats[currentIndex, sensitive, 0] == 100)
                         checkMateStatus = 1;
                 }
             }
         }
+        Debug.WriteLine(kingsTeam + ": " + checkMateStatus);
         return checkMateStatus;
     }
     private static bool inGame(int Column, int Row)
@@ -77,13 +91,17 @@ public static class gameActions
             return false;
         }
     }
-    public static void assignMoves(int IDconvert, ref int[,] stats, ref Piece[] Pieces, int dmg)
+    public static void assignMoves(int IDconvert, ref int[,,] stats, ref Piece[] Pieces, int dmg)
     {
         int[,] moves = Pieces[IDconvert].move();
         int[,] attackMap = Pieces[IDconvert].attack();
         int Column = IDconvert % 8;
         int Row = (IDconvert - Column) / 8;
         Boolean breakLoop;
+        int sensitive = 1;
+        String pieceTeam = Pieces[IDconvert].getTeam();
+        if (pieceTeam == "Black")
+            sensitive = 2;
 
 
         for (int i = 0; i < moves.GetLength(0); i++)
@@ -98,7 +116,7 @@ public static class gameActions
                 {
                     if (Pieces[currentIndex].getTeam() == "FF" && dmg == 0)
                     {
-                        stats[currentIndex, 0] = 1;
+                        stats[currentIndex, 0, 0] = 1;
                     }
                     else
                     {
@@ -127,21 +145,21 @@ public static class gameActions
                 {
                     if (dmg == 0 && Pieces[currentIndex].getPieceType() != "King")
                     {
-                        if (Pieces[currentIndex].getTeam() != Pieces[IDconvert].getTeam() && Pieces[currentIndex].getTeam() != "FF")
-                            stats[currentIndex, 0] = 1;
+                        if (Pieces[currentIndex].getTeam() != pieceTeam && Pieces[currentIndex].getTeam() != "FF")
+                            stats[currentIndex, 0, 0] = 1;
                     }
 
                     if (Pieces[currentIndex].getTeam() != "FF")
                         breakLoop = true;
-                    if (Pieces[currentIndex].getTeam() != Pieces[IDconvert].getTeam())
+                    if (Pieces[currentIndex].getTeam() != pieceTeam)
                     {
-                        if (Pieces[IDconvert].getTeam() == "White")
+                        for (int x = 0; x < 10; x++)
                         {
-                            stats[currentIndex, 1] += dmg;
-                        }
-                        else
-                        {
-                            stats[currentIndex, 2] += dmg;
+                            if (stats[currentIndex, sensitive, x] == 100)
+                            {
+                                stats[currentIndex, sensitive, x] = IDconvert;
+                                break;
+                            }
                         }
                     }
                 }
@@ -151,10 +169,3 @@ public static class gameActions
         }
     }
 }
-
-
-/*
- * Do zrobienia:
- * zaprojektowanie tur
- * 
- */

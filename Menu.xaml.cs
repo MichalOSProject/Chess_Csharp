@@ -12,7 +12,7 @@ namespace Chess
         public Color bColor2 = Color.FromRgb(254, 254, 254);
         private Game gameWindow;
         private ColorPanel colorWindow;
-        protected Boolean team = false;
+        protected String team;
         public Menu()
         {
             InitializeComponent();
@@ -97,24 +97,29 @@ namespace Chess
 
         private void changeTeam(object sender, RoutedEventArgs e)
         {
-            this.team = !this.team;
-            if (team)
-                (sender as Button).Background = Brushes.White;
-            else
+            if (team == "White")
+            {
+                team = "Black";
                 (sender as Button).Background = Brushes.Black;
+            }
+            else {
+                team = "White";
+                (sender as Button).Background = Brushes.White;
+            }
         }
         private void newGame(object sender, RoutedEventArgs e)
         {
             if (gameWindow == null || !gameWindow.IsVisible)
             {
-                gameWindow = new Game(bColor1, bColor2);
+                gameWindow = new Game(bColor1, bColor2, team);
                 Debug.WriteLine(bColor1.R);
                 Debug.WriteLine(bColor1.G);
                 Debug.WriteLine(bColor1.B);
                 Debug.WriteLine(bColor2.R);
                 Debug.WriteLine(bColor2.G);
                 Debug.WriteLine(bColor2.B);
-                gameWindow.Closed += (s, args) => { gameWindow = null; };
+                this.Hide();
+                gameWindow.Closed += (s, args) => { gameWindow = null; this.Show(); };
                 gameWindow.Show();
             }
             else
@@ -124,3 +129,9 @@ namespace Chess
         }
     }
 }
+/*
+ * ToDO:
+ * -włącz działanie teamów
+ * -koniec gry
+ * -poprawienie króla bo zabicie konia pionkiem nie jest uwzględniona
+*/
