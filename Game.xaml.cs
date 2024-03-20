@@ -14,28 +14,21 @@ namespace Chess
         private Button[,] BoardSpace;
         private int[,,] stats; //[ID,1-3,attacker]
         private int played;
-        private int lastUsed;
+        private int lastUsed = 8;
         private int checkMateStatusW = 0;
         private int checkMateStatusB = 0;
         private Color bColor1;
         private Color bColor2;
-        private String team = "White";
+        private String team;
         public Game(Color bColor1, Color bColor2, String team)
         {
+            this.team = team;
             this.bColor1 = bColor1;
             this.bColor2 = bColor2;
-
-            Debug.WriteLine(this.bColor1.R);
-            Debug.WriteLine(this.bColor1.G);
-            Debug.WriteLine(this.bColor1.B);
-            Debug.WriteLine(this.bColor2.R);
-            Debug.WriteLine(this.bColor2.G);
-            Debug.WriteLine(this.bColor2.B);
             InitializeComponent();
             defineMap();
             createMap();
         }
-
         private void defineMap()
         {
             stats = new int[64, 3, 10];
@@ -66,29 +59,6 @@ namespace Chess
             setMoves();
             clearMoves();
         }
-
-        private void setMoves()
-        {
-
-            for (int i = 0; i < 64; i++)
-            {
-                for (int j = 0; j < 10; j++)
-                {
-                    stats[i, 1, j] = 100;
-                    stats[i, 2, j] = 100;
-                }
-            }
-            for (int i = 0; i < 64; i++)
-                gameActions.assignMoves(i, ref stats, ref Pieces, 1);
-        }
-        private void clearMoves()
-        {
-            for (int i = 0; i < 64; i++)
-            {
-                stats[i, 0, 0] = 0;
-            }
-
-        }
         private void createMap()
         {
             int ID = 0;
@@ -108,7 +78,7 @@ namespace Chess
                     {
                         BoardSpace[j, k].Background = new SolidColorBrush(bColor2);
                     }
-                    BoardSpace[j, k].Tag = Int32.Parse(ID.ToString());
+                    BoardSpace[j, k].Tag = ID;
                     BoardSpace[j, k].Content = Pieces[ID].getTexture();
                     BoardSpace[j, k].Click += Button_Click;
                     BoardSpace[j, k].FontWeight = FontWeights.Bold;
@@ -123,6 +93,51 @@ namespace Chess
 
                 }
             }
+        }
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            buttonAction((int)((Button)sender).Tag);
+        }
+        private void buttonAction(int played)
+        {
+            this.played = played;
+            if (allowedPlace(played))
+            {
+                if (stage == 1)
+                    clearMoves();
+                gameActions.action(ref Pieces, ref stage, ref stats, played);
+                repaint(ref BoardSpace, stats);
+
+                if (stage == 0)
+                {
+                    endgame();
+                    if (played != lastUsed)
+                        if (team == "White")
+                            team = "Black";
+                        else
+                            team = "White";
+                }
+                lastUsed = played;
+            }
+        }
+        private Boolean allowedPlace(int ID)
+        {
+            if ((stats[ID, 0, 0] != 0 || stage == 0 || lastUsed == ID) && (Pieces[ID].getTeam() == team || stage == 1))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        private void clearMoves()
+        {
+            for (int i = 0; i < 64; i++)
+            {
+                stats[i, 0, 0] = 0;
+            }
+
         }
         private void repaint(ref Button[,] BoardSpace, int[,,] stats)
         {
@@ -151,19 +166,20 @@ namespace Chess
                 }
             }
         }
-
-        private Boolean allowedPlace(int ID)
+        private void setMoves()
         {
-            if ((stats[ID, 0, 0] != 0 || stage == 0 || lastUsed == ID) && (Pieces[ID].getTeam() == team || stage == 1))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
 
+            for (int i = 0; i < 64; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    stats[i, 1, j] = 100;
+                    stats[i, 2, j] = 100;
+                }
+            }
+            for (int i = 0; i < 64; i++)
+                gameActions.assignMoves(i, ref stats, ref Pieces, 1);
+        }
         private void endgame()
         {
             for (int i = 0; i < 64; i++)
@@ -196,30 +212,6 @@ namespace Chess
                     MessageBox.Show("The King of the White Team is in Danger!");
                 if (checkMateStatusB == 1)
                     MessageBox.Show("The King of the Black Team is in Danger!");
-            }
-
-        }
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            played = (int)(sender as Button).Tag;
-            if (allowedPlace(played))
-            {
-                if (stage == 1)
-                    clearMoves();
-                gameActions.action(ref Pieces, ref stage, ref stats, played);
-                repaint(ref BoardSpace, stats);
-
-                if (stage == 0)
-                {
-                    endgame();
-                    if (played != lastUsed)
-                    if (team == "White")
-                        team = "Black";
-                    else
-                        team = "White";
-                }
-                lastUsed = played;
-
             }
         }
     }

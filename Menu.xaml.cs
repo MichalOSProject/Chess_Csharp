@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -12,19 +11,19 @@ namespace Chess
         public Color bColor2 = Color.FromRgb(254, 254, 254);
         private Game gameWindow;
         private ColorPanel colorWindow;
-        public String team;
+        public String team = "White";
         public Menu()
         {
             InitializeComponent();
             Button runGame = new Button();
             runGame.Content = "Run Game";
             runGame.Name = "RG";
-            runGame.Click += newGame;
+            runGame.Click += buttonGame;
             Grid.SetColumn(runGame, 3);
             Grid.SetRow(runGame, 8);
             GameMenu.Children.Add(runGame);
             Label lTeam = new Label();
-            lTeam.Content = "Sel. Team: ";
+            lTeam.Content = "Starts the game: ";
             lTeam.Name = "lTeam";
             Grid.SetColumn(lTeam, 1);
             Grid.SetRow(lTeam, 1);
@@ -43,16 +42,16 @@ namespace Chess
             GameMenu.Children.Add(l2type);
             Button bTeam = new Button();
             bTeam.Content = "";
-            bTeam.Background = Brushes.Black;
+            bTeam.Background = Brushes.White;
             bTeam.Name = "sTeam";
-            bTeam.Click += changeTeam;
+            bTeam.Click += buttonTeam;
             Grid.SetColumn(bTeam, 3);
             Grid.SetRow(bTeam, 1);
             GameMenu.Children.Add(bTeam);
             Button color1 = new Button();
             color1.Content = "1# Color";
             color1.Name = "bColor1";
-            color1.Click += setColor;
+            color1.Click += buttonColor;
             color1.Background = new SolidColorBrush(bColor1);
             Grid.SetColumn(color1, 3);
             Grid.SetRow(color1, 3);
@@ -60,29 +59,58 @@ namespace Chess
             Button color2 = new Button();
             color2.Content = "2# Color";
             color2.Name = "bColor2";
-            color2.Click += setColor;
+            color2.Click += buttonColor;
             color2.Background = new SolidColorBrush(bColor2);
             Grid.SetColumn(color2, 3);
             Grid.SetRow(color2, 5);
             GameMenu.Children.Add(color2);
         }
 
-        private void setColor(object sender, RoutedEventArgs e)
+        private void buttonColor(object sender, RoutedEventArgs e)
+        {
+            setColor(sender as Button);
+        }
+
+        private void buttonTeam(object sender, RoutedEventArgs e)
+        {
+            changeTeam(sender as Button);
+        }
+
+        private void buttonGame(object sender, RoutedEventArgs e)
+        {
+            newGame();
+        }
+
+        private void newGame()
+        {
+            if (gameWindow == null || !gameWindow.IsVisible)
+            {
+                gameWindow = new Game(bColor1, bColor2, team);
+                this.Hide();
+                gameWindow.Closed += (s, args) => { gameWindow = null; this.Show(); };
+                gameWindow.Show();
+            }
+            else
+            {
+                gameWindow.Activate();
+            }
+        }
+        private void setColor(Button bName)
         {
             if (colorWindow == null || !colorWindow.IsVisible)
             {
-                if ((sender as Button).Name == "bColor1")
+                if (bName.Name == "bColor1")
                     colorWindow = new ColorPanel(bColor1);
                 else
                     colorWindow = new ColorPanel(bColor2);
 
                 colorWindow.Closed += (s, args) =>
                 {
-                    if ((sender as Button).Name == "bColor1")
+                    if (bName.Name == "bColor1")
                         bColor1 = colorWindow.selectedColor;
                     else
                         bColor2 = colorWindow.selectedColor;
-                    (sender as Button).Background = new SolidColorBrush(colorWindow.selectedColor);
+                    bName.Background = new SolidColorBrush(colorWindow.selectedColor);
                     colorWindow = null;
                 };
                 colorWindow.Show();
@@ -95,30 +123,17 @@ namespace Chess
 
         }
 
-        private void changeTeam(object sender, RoutedEventArgs e)
+        private void changeTeam(Button bName)
         {
             if (team == "White")
             {
                 team = "Black";
-                (sender as Button).Background = Brushes.Black;
-            }
-            else {
-                team = "White";
-                (sender as Button).Background = Brushes.White;
-            }
-        }
-        private void newGame(object sender, RoutedEventArgs e)
-        {
-            if (gameWindow == null || !gameWindow.IsVisible)
-            {
-                gameWindow = new Game(bColor1, bColor2, team);
-                this.Hide();
-                gameWindow.Closed += (s, args) => { gameWindow = null; this.Show(); };
-                gameWindow.Show();
+                bName.Background = Brushes.Black;
             }
             else
             {
-                gameWindow.Activate();
+                team = "White";
+                bName.Background = Brushes.White;
             }
         }
     }

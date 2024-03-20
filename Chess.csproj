@@ -9,32 +9,44 @@
 
   <ItemGroup>
     <None Remove="Texture\BishopB.png" />
+    <None Remove="Texture\BishopBlack.png" />
     <None Remove="Texture\BishopW.png" />
+    <None Remove="Texture\BishopWhite.png" />
     <None Remove="Texture\KingB.png" />
+    <None Remove="Texture\KingBlack.png" />
     <None Remove="Texture\KingW.png" />
+    <None Remove="Texture\KingWhite.png" />
     <None Remove="Texture\KnightB.png" />
+    <None Remove="Texture\KnightBlack.png" />
     <None Remove="Texture\KnightW.png" />
+    <None Remove="Texture\KnightWhite.png" />
     <None Remove="Texture\PawnB.png" />
+    <None Remove="Texture\PawnBlack.png" />
     <None Remove="Texture\PawnW.png" />
+    <None Remove="Texture\PawnWhite.png" />
     <None Remove="Texture\QueenB.png" />
+    <None Remove="Texture\QueenBlack.png" />
     <None Remove="Texture\QueenW.png" />
+    <None Remove="Texture\QueenWhite.png" />
     <None Remove="Texture\RookB.png" />
+    <None Remove="Texture\RookBlack.png" />
     <None Remove="Texture\RookW.png" />
+    <None Remove="Texture\RookWhite.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Texture\BishopB.png" />
-    <Resource Include="Texture\BishopW.png" />
-    <Resource Include="Texture\KingB.png" />
-    <Resource Include="Texture\KingW.png" />
-    <Resource Include="Texture\KnightB.png" />
-    <Resource Include="Texture\KnightW.png" />
-    <Resource Include="Texture\PawnB.png" />
-    <Resource Include="Texture\PawnW.png" />
-    <Resource Include="Texture\QueenB.png" />
-    <Resource Include="Texture\QueenW.png" />
-    <Resource Include="Texture\RookB.png" />
-    <Resource Include="Texture\RookW.png" />
+    <Resource Include="Texture\BishopBlack.png" />
+    <Resource Include="Texture\BishopWhite.png" />
+    <Resource Include="Texture\KingBlack.png" />
+    <Resource Include="Texture\KingWhite.png" />
+    <Resource Include="Texture\KnightBlack.png" />
+    <Resource Include="Texture\KnightWhite.png" />
+    <Resource Include="Texture\PawnBlack.png" />
+    <Resource Include="Texture\PawnWhite.png" />
+    <Resource Include="Texture\QueenBlack.png" />
+    <Resource Include="Texture\QueenWhite.png" />
+    <Resource Include="Texture\RookBlack.png" />
+    <Resource Include="Texture\RookWhite.png" />
   </ItemGroup>
 
 </Project>

@@ -15,16 +15,6 @@ public class Pawn : Piece
     int specifiedCount = 2;
     public Pawn(string team) : base(team, "Pawn")
     {
-        if (getTeam() == "White")
-            textureURL = "/Texture/PawnW.png";
-        else
-            textureURL = "/Texture/PawnB.png";
-        Texture = new Image
-        {
-            Source = new BitmapImage(new Uri(textureURL, UriKind.Relative)),
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Center
-        };
     }
 
     public override int[,] move()
@@ -62,10 +52,5 @@ public class Pawn : Piece
     public override int jumpAttack()
     {
         return 1;
-    }
-
-    public override Image getTexture()
-    {
-        return Texture;
     }
 }

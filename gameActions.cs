@@ -1,92 +1,31 @@
 ﻿using System;
-using System.Diagnostics;
 
 public static class gameActions
 {
-    static Piece buffPiece;
-    static int buffId = 0;
+    static Piece lastPiece;
+    static int lastId = 0;
     public static void action(ref Piece[] Pieces, ref int stage, ref int[,,] stats, int IDconvert)
     {
         if (stage == 0)
         {
-            buffPiece = Pieces[IDconvert];
-            buffId = IDconvert;
+            lastPiece = Pieces[IDconvert];
+            lastId = IDconvert;
             assignMoves(IDconvert, ref stats, ref Pieces, 0);
 
             stage = 1;
         }
         else
         {
-            if (IDconvert != buffId)
+            if (IDconvert != lastId)
             {
-                buffPiece.setMoved(true);
-                Pieces[buffId] = new EmptyPiece();
-                Pieces[IDconvert] = buffPiece;
+                lastPiece.setMoved(true);
+                Pieces[lastId] = new EmptyPiece();
+                Pieces[IDconvert] = lastPiece;
             }
             stage = 0;
 
         }
 
-    }
-    public static int checkMate(Piece[] Pieces, int[,,] stats, int ID)
-    {
-        int checkMateStatus = 0;
-        int[,] attackMap = Pieces[ID].attack();
-        int Column = ID % 8;
-        int Row = (ID - Column) / 8;
-        string kingsTeam = Pieces[ID].getTeam();
-        int sensitive = 1; // 1-> sensitive for Black dmg 2->sensitive for Black dmg
-        int enemySensitive = 2;
-        int killableSensitive = 0;
-
-        if (kingsTeam == "White")
-        {
-            sensitive = 2;
-            enemySensitive = 1;
-        }
-        if (stats[ID, sensitive, 0] != 100)
-        {
-            checkMateStatus = 1;
-            for (int i = 0; i < 10; i++)
-            {
-                int attacker = stats[ID, sensitive, i];
-                if (attacker == 100)
-                    break;
-                if (stats[attacker, enemySensitive, 0] == 100)
-                    checkMateStatus = 2;
-                else
-                    killableSensitive++;
-            }
-            if (killableSensitive >= 2)
-                checkMateStatus = 2;
-        }
-        if (checkMateStatus != 0)
-        {
-            for (int i = 0; i < attackMap.GetLength(0); i++)
-            {
-                int currentRow = Row + attackMap[i, 1];
-                int currentColumn = Column + attackMap[i, 0];
-                int currentIndex = (currentRow * 8) + currentColumn;
-                if (inGame(currentColumn, currentRow))
-                {
-                    if (Pieces[currentIndex].getTeam() != kingsTeam && stats[currentIndex, sensitive, 0] == 100)
-                        checkMateStatus = 1;
-                }
-            }
-        }
-        Debug.WriteLine(kingsTeam + ": " + checkMateStatus);
-        return checkMateStatus;
-    }
-    private static bool inGame(int Column, int Row)
-    {
-        if (Column >= 0 && Row >= 0 && Column <= 7 && Row <= 7)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
     }
     public static void assignMoves(int IDconvert, ref int[,,] stats, ref Piece[] Pieces, int dmg)
     {
@@ -165,4 +104,64 @@ public static class gameActions
             }
         }
     }
+    public static int checkMate(Piece[] Pieces, int[,,] stats, int ID)
+    {
+        int checkMateStatus = 0;
+        int[,] attackMap = Pieces[ID].attack();
+        int Column = ID % 8;
+        int Row = (ID - Column) / 8;
+        string kingsTeam = Pieces[ID].getTeam();
+        int sensitive = 1; // 1-> sensitive for Black dmg 2->sensitive for White dmg
+        int enemySensitive = 2;
+        int killableSensitive = 0;
+
+        if (kingsTeam == "White")
+        {
+            sensitive = 2;
+            enemySensitive = 1;
+        }
+        if (stats[ID, sensitive, 0] != 100)
+        {
+            checkMateStatus = 1;
+            for (int i = 0; i < 10; i++)
+            {
+                int attacker = stats[ID, sensitive, i];
+                if (attacker == 100)
+                    break;
+                if (stats[attacker, enemySensitive, 0] == 100)
+                    checkMateStatus = 2;
+                else
+                    killableSensitive++;
+            }
+            if (killableSensitive >= 2)
+                checkMateStatus = 2;
+        }
+        if (checkMateStatus != 0)
+        {
+            for (int i = 0; i < attackMap.GetLength(0); i++)
+            {
+                int currentRow = Row + attackMap[i, 1];
+                int currentColumn = Column + attackMap[i, 0];
+                int currentIndex = (currentRow * 8) + currentColumn;
+                if (inGame(currentColumn, currentRow))
+                {
+                    if (Pieces[currentIndex].getTeam() != kingsTeam && stats[currentIndex, sensitive, 0] == 100)
+                        checkMateStatus = 1;
+                }
+            }
+        }
+        return checkMateStatus;
+    }
+    private static bool inGame(int Column, int Row)
+    {
+        if (Column >= 0 && Row >= 0 && Column <= 7 && Row <= 7)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
 }

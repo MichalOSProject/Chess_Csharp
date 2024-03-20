@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -35,7 +34,6 @@ namespace Chess
             sGreen.Maximum = 255;
             sGreen.Value = green;
             sGreen.ValueChanged += updateValue;
-            Debug.WriteLine(sGreen.Value);
             Grid.SetColumn(sGreen, 3);
             Grid.SetRow(sGreen, 3);
             ColorOptions.Children.Add(sGreen);
@@ -82,6 +80,10 @@ namespace Chess
 
         }
         private void updateValue(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            updateColor();
+        }
+        private void updateColor()
         {
             red = (byte)sRed.Value;
             green = (byte)sGreen.Value;
