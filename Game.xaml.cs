@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -14,7 +13,7 @@ namespace Chess
         private Button[,] BoardSpace;
         private int[,,] stats; //[ID,1-3,attacker]
         private int played;
-        private int lastUsed = 8;
+        private int lastUsed;
         private int checkMateStatusW = 0;
         private int checkMateStatusB = 0;
         private Color bColor1;
@@ -32,7 +31,7 @@ namespace Chess
         private void defineMap()
         {
             stats = new int[64, 3, 10];
-            clearMoves();
+            removeMovesMarks();
             Pieces = new Piece[64];
             Pieces[0] = new Rook("Black");
             Pieces[7] = new Rook("Black");
@@ -56,8 +55,8 @@ namespace Chess
                 Pieces[i] = new Pawn("White");
             for (int i = 16; i < 48; i++)
                 Pieces[i] = new EmptyPiece();
-            setMoves();
-            clearMoves();
+            assignDamage();
+            removeMovesMarks();
         }
         private void createMap()
         {
@@ -98,40 +97,43 @@ namespace Chess
         {
             buttonAction((int)((Button)sender).Tag);
         }
-        private void buttonAction(int played)
+        private void buttonAction(int ID)
         {
-            this.played = played;
-            if (allowedPlace(played))
+            this.played = ID;
+
+            if (stage == 0 && allowedPlace(played))
             {
-                if (stage == 1)
-                    clearMoves();
                 gameActions.action(ref Pieces, ref stage, ref stats, played);
                 repaint(ref BoardSpace, stats);
-
-                if (stage == 0)
-                {
-                    endgame();
-                    if (played != lastUsed)
-                        if (team == "White")
-                            team = "Black";
-                        else
-                            team = "White";
-                }
                 lastUsed = played;
+            }
+            else if (stage == 1 && allowedPlace(played))
+            {
+                gameActions.action(ref Pieces, ref stage, ref stats, played);
+                removeMovesMarks();
+                assignDamage();
+                repaint(ref BoardSpace, stats);
+                if (played != lastUsed)
+                {
+                    if (team == "White")
+                        team = "Black";
+                    else
+                        team = "White";
+                    assignDamage();
+                    check();
+                }
             }
         }
         private Boolean allowedPlace(int ID)
         {
-            if ((stats[ID, 0, 0] != 0 || stage == 0 || lastUsed == ID) && (Pieces[ID].getTeam() == team || stage == 1))
-            {
+            if (stage == 1 && (stats[ID, 0, 0] == 1 || lastUsed == ID))
                 return true;
-            }
+            else if (stage == 0 && Pieces[ID].getTeam() == team)
+                return true;
             else
-            {
                 return false;
-            }
         }
-        private void clearMoves()
+        private void removeMovesMarks()
         {
             for (int i = 0; i < 64; i++)
             {
@@ -141,7 +143,6 @@ namespace Chess
         }
         private void repaint(ref Button[,] BoardSpace, int[,,] stats)
         {
-            setMoves();
             int ID = 0;
             for (int j = 0; j <= 7; j++)
             {
@@ -166,7 +167,7 @@ namespace Chess
                 }
             }
         }
-        private void setMoves()
+        private void assignDamage()
         {
 
             for (int i = 0; i < 64; i++)
@@ -180,39 +181,45 @@ namespace Chess
             for (int i = 0; i < 64; i++)
                 gameActions.assignMoves(i, ref stats, ref Pieces, 1);
         }
-        private void endgame()
+        private void check()
         {
             for (int i = 0; i < 64; i++)
             {
                 if (Pieces[i].getPieceType() == "King")
                     if (Pieces[i].getTeam() == "White")
+                    {
+                        if (checkMateStatusW <= gameActions.checkMate(Pieces, stats, i) && checkMateStatusW == 1)
+                        {
+                            endgame("The Black Team Wins! The attack was not avoided");
+                            break;
+                        }
                         checkMateStatusW = gameActions.checkMate(Pieces, stats, i);
+                        if (checkMateStatusW == 1)
+                            MessageBox.Show("The King of the White Team is in Danger!");
+                    }
                     else
+                    {
+                        if (checkMateStatusB <= gameActions.checkMate(Pieces, stats, i) && checkMateStatusB == 1)
+                        {
+                            endgame("The White Team Wins! The attack was not avoided");
+                            break;
+                        }
                         checkMateStatusB = gameActions.checkMate(Pieces, stats, i);
-
+                        if (checkMateStatusB == 1)
+                            MessageBox.Show("The King of the Black Team is in Danger!");
+                    }
             }
             if (checkMateStatusB == 2 && checkMateStatusW == 2)
-            {
-                MessageBox.Show("Draw!");
-                this.Close();
-            }
+                endgame("Draw!");
             else if (checkMateStatusW == 2)
-            {
-                MessageBox.Show("The Black Team Wins!");
-                this.Close();
-            }
+                endgame("The Black Team Wins!");
             else if (checkMateStatusB == 2)
-            {
-                MessageBox.Show("The White Team Wins!");
-                this.Close();
-            }
-            else
-            {
-                if (checkMateStatusW == 1)
-                    MessageBox.Show("The King of the White Team is in Danger!");
-                if (checkMateStatusB == 1)
-                    MessageBox.Show("The King of the Black Team is in Danger!");
-            }
+                endgame("The White Team Wins!");
+        }
+        private void endgame(String text)
+        {
+            MessageBox.Show(text);
+            this.Close();
         }
     }
 }
