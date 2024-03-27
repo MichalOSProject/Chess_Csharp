@@ -12,7 +12,7 @@ namespace Chess
         private byte red;
         private byte green;
         private byte blue;
-        Label selectedColorBaner;
+        TextBox selectedColorBaner;
         public Color selectedColor;
         public ColorPanel(Color bColor)
         {
@@ -47,32 +47,27 @@ namespace Chess
             ColorOptions.Children.Add(sBlue);
             Label lRed = new Label();
             lRed.Content = "Red: ";
-            lRed.Name = "lRed";
             Grid.SetColumn(lRed, 1);
             Grid.SetRow(lRed, 1);
             ColorOptions.Children.Add(lRed);
             Label lGreen = new Label();
             lGreen.Content = "Green: ";
-            lGreen.Name = "lGreen";
             Grid.SetColumn(lGreen, 1);
             Grid.SetRow(lGreen, 3);
             ColorOptions.Children.Add(lGreen);
             Label lBlue = new Label();
             lBlue.Content = "Blue: ";
-            lBlue.Name = "lBlue";
             Grid.SetColumn(lBlue, 1);
             Grid.SetRow(lBlue, 5);
             ColorOptions.Children.Add(lBlue);
-            selectedColorBaner = new Label();
-            selectedColorBaner.Content = "";
-            selectedColorBaner.Name = "selColor";
+            selectedColorBaner = new TextBox();
+            selectedColorBaner.Text = "";
             selectedColorBaner.Background = new SolidColorBrush(selectedColor);
             Grid.SetColumn(selectedColorBaner, 1);
             Grid.SetRow(selectedColorBaner, 7);
             ColorOptions.Children.Add(selectedColorBaner);
             Button confirmColor = new Button();
             confirmColor.Content = "Confirm";
-            confirmColor.Name = "confirmColor";
             confirmColor.Click += CloseWindow;
             Grid.SetColumn(confirmColor, 3);
             Grid.SetRow(confirmColor, 7);

@@ -11,6 +11,7 @@ namespace Chess
         private int stage = 0;
         private Piece[] Pieces;
         private Button[,] BoardSpace;
+        private TextBox[] infoPanel;
         private int[,,] stats; //[ID,1-3,attacker]
         private int played;
         private int lastUsed;
@@ -19,11 +20,16 @@ namespace Chess
         private Color bColor1;
         private Color bColor2;
         private String team;
+        private SolidColorBrush teamColor;
         public Game(Color bColor1, Color bColor2, String team)
         {
             this.team = team;
             this.bColor1 = bColor1;
             this.bColor2 = bColor2;
+            if (team == "White")
+                teamColor = Brushes.White;
+            else
+                teamColor = Brushes.Black;
             InitializeComponent();
             defineMap();
             createMap();
@@ -92,6 +98,29 @@ namespace Chess
 
                 }
             }
+            infoPanel = new TextBox[8];
+            infoPanel[0] = new TextBox();
+            infoPanel[0].Text = "Current Turn: ";
+            infoPanel[0].FontWeight = FontWeights.Bold;
+            infoPanel[0].Foreground = Brushes.Red;
+            infoPanel[0].Background = teamColor;
+            infoPanel[0].BorderThickness = new Thickness(0);
+            Grid.SetColumn(infoPanel[0], 0);
+            Grid.SetRow(infoPanel[0], 8);
+            SandBox.Children.Add(infoPanel[0]);
+            for (int i = 1; i < 8; i++)
+            {
+                
+                infoPanel[i] = new TextBox();
+                infoPanel[i].Text = "";
+                infoPanel[i].Background = teamColor;
+                infoPanel[i].BorderThickness = new Thickness(0);
+                Grid.SetRow(infoPanel[i], 8);
+                Grid.SetColumn(infoPanel[i], i);
+                SandBox.Children.Add(infoPanel[i]);
+            }
+
+
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -112,16 +141,18 @@ namespace Chess
                 gameActions.action(ref Pieces, ref stage, ref stats, played);
                 removeMovesMarks();
                 assignDamage();
-                repaint(ref BoardSpace, stats);
+
                 if (played != lastUsed)
                 {
                     if (team == "White")
                         team = "Black";
                     else
                         team = "White";
+                    repaint(ref BoardSpace, stats);
                     assignDamage();
                     check();
                 }
+                repaint(ref BoardSpace, stats);
             }
         }
         private Boolean allowedPlace(int ID)
@@ -165,6 +196,15 @@ namespace Chess
                         BoardSpace[j, k].Background = Brushes.LightBlue;
                     ID++;
                 }
+            }
+            if (team == "White")
+               teamColor = Brushes.White;
+            else
+                teamColor = Brushes.Black;
+            //else
+            foreach (TextBox infoBox in infoPanel)
+            {
+                infoBox.Background = teamColor;
             }
         }
         private void assignDamage()
